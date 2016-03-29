@@ -98,4 +98,23 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('mainWindow')
     }
+
+    @Ignore @Test
+    public void testButton() {
+        def terminal = new LanternaTerminalBuilder().terminal() {
+            window(id: 'mainWindow', title: 'My First Window') {
+                panel {
+                    linearLayout() {
+                        textBox(id: 'tb1', size: 20, 'Value to print')
+                        label('Click below')
+                        button('Click Me') {
+                            println registry.tb1.text
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('mainWindow')
+    }
 }

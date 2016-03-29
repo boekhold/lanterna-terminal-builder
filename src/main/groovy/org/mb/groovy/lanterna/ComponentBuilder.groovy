@@ -88,4 +88,28 @@ class ComponentBuilder extends AbstractBuilder {
 
         addComponent(attr, addBorder(box, attr))
     }
+
+    public void button(String text) {
+        button(null, text, null)
+    }
+
+    public void button(Map attr, String text) {
+        button(attr, text, null)
+    }
+
+    public void button(String text, Closure cl) {
+        button(null, text, cl)
+    }
+
+    public void button(Map attr, String text, Closure cl) {
+        Component button
+
+        if (cl == null) {
+            button = new Button(text)
+        } else {
+            button = new Button(text, cl)
+        }
+
+        addComponent(attr, button)
+    }
 }
