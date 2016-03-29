@@ -1,5 +1,6 @@
 package org.mb.groovy.lanterna
 
+import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.gui2.Borders
 import com.googlecode.lanterna.gui2.Component
 
@@ -35,6 +36,27 @@ abstract class AbstractBuilder {
             default: border = Borders.singleLine()
         }
         return c.withBorder(border)
+    }
+
+    static TerminalSize getSize(Map attr) {
+        TerminalSize size
+
+        if (!attr?.size)
+            return null
+
+        if (attr.size instanceof List) {
+            def sl = attr.size as List
+            if (sl*.class == [Integer, Integer]) {
+                size = new TerminalSize(sl[0] as int, sl[1] as int)
+            } else {
+                throw new LanternaBuilderException('size specification invalid: requires 2 list elements of type int')
+            }
+        } else if (attr.size instanceof Integer) {
+            size = new TerminalSize((int)attr.size, 1)
+        } else {
+            throw new LanternaBuilderException('size specification invalid')
+        }
+        return size
     }
 
     void registerComponent(Map attr, Component c) {

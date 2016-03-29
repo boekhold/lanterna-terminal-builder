@@ -56,25 +56,12 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     void textBox(Map attr, String defaultText) {
-        TerminalSize size
+        TextBox box
+        TerminalSize size = getSize(attr)
 
-        if (!attr.size)
+        if (!size)
             throw new LanternaBuilderException('size specification is required')
 
-        if (attr.size instanceof List) {
-            def sl = attr.size as List
-            if (sl*.class == [Integer, Integer]) {
-                size = new TerminalSize(sl[0] as int, sl[1] as int)
-            } else {
-                throw new LanternaBuilderException('size specification invalid: requires 2 list elements of type int')
-            }
-        } else if (attr.size instanceof Integer) {
-            size = new TerminalSize((int)attr.size, 1)
-        } else {
-            throw new LanternaBuilderException('size specification invalid')
-        }
-
-        TextBox box
         if (defaultText) {
             box = new TextBox(size, defaultText)
         } else {
@@ -111,5 +98,36 @@ class ComponentBuilder extends AbstractBuilder {
         }
 
         addComponent(attr, button)
+    }
+
+    public void comboBox(Collection c) {
+        comboBox(null, c, null)
+    }
+
+    public void comboBox(Map attr, Collection c) {
+        comboBox(attr, c, null)
+    }
+
+    public void comboBox(Collection c, Closure cl) {
+        comboBox(null, c, cl)
+    }
+
+    public void comboBox(Map attr, Collection c, Closure cl) {
+        TerminalSize size = getSize(attr)
+        ComboBox cb = new ComboBox(c)
+
+        if (size)
+            cb.preferredSize = size
+
+        // Not sure what this is supposed to do, the documentation mentions it
+        // but it doesn't appear to do anything
+        if (attr?.writeable)
+            cb.readOnly = !attr.writeable
+
+        if (cl != null) {
+            cb.addListener(cl)
+        }
+
+        addComponent(attr, cb)
     }
 }

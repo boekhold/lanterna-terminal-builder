@@ -117,4 +117,31 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('mainWindow')
     }
+
+    @Ignore @Test
+    public void testComboBox() {
+        def terminal = new LanternaTerminalBuilder().terminal() {
+            window(id: 'mainWindow', title: 'My First Window') {
+                panel {
+                    gridLayout(2) {
+                        def theCollection = ['One', 'Two', 'Three']
+                        label('collection with size')
+                        comboBox(size: [10, 4], theCollection)
+                        label('collection with id')
+                        comboBox(id: 'theBox', theCollection)
+                        label('collection with action')
+                        comboBox(theCollection) { selected, previous ->
+                            println "selected index: $selected"
+                        }
+                        label('writeable collection with action')
+                        comboBox(writeable: true, theCollection) { selected, previous ->
+                            println "read only: selected index: $selected"
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('mainWindow')
+    }
 }
