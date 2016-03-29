@@ -4,14 +4,7 @@ import java.awt.*
 
 class LanternaTerminalBuilder {
     LanternaTerminal terminal(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = LanternaTerminal) Closure cl) {
-        LanternaTerminal terminal = new LanternaTerminal()
-
-        if (terminal instanceof Frame) {
-            Frame frame = (Frame) terminal
-
-            if (attr?.title)
-                frame.title = attr.title
-        }
+        LanternaTerminal terminal = new LanternaTerminal(attr)
 
         Closure code = cl.rehydrate(terminal, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY

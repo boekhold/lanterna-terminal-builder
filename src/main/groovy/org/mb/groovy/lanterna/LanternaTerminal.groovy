@@ -10,9 +10,9 @@ import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import com.googlecode.lanterna.terminal.Terminal
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
 
-import javax.swing.WindowConstants
+import javax.swing.*
+import java.awt.Frame
 
 class LanternaTerminal {
     private Screen screen
@@ -20,12 +20,19 @@ class LanternaTerminal {
     private Map<String, Window> windows = [:]
     private Map<String, Map<String, Component>> registry = [:]
 
-    LanternaTerminal() {
+    LanternaTerminal(Map attr) {
         // Setup terminal and screen layers
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
 
-        if (terminal instanceof SwingTerminalFrame)
-            ((SwingTerminalFrame)terminal).defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+        if (terminal instanceof Frame) {
+            Frame frame = terminal as Frame
+
+            if (attr?.title)
+                frame.title = attr.title
+        }
+
+        if (terminal instanceof JFrame)
+            (terminal as JFrame).defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         screen = new TerminalScreen(terminal);
         screen.startScreen();

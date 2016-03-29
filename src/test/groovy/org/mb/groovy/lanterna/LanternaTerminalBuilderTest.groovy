@@ -6,7 +6,7 @@ import org.junit.Test
 public class LanternaTerminalBuilderTest {
     @Ignore @Test
     public void testBasics() {
-        def terminal = new LanternaTerminalBuilder().terminal() {
+        def terminal = new LanternaTerminalBuilder().terminal(title: 'Main Frame') {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     gridLayout(2) {
