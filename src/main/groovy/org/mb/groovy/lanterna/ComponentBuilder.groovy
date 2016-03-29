@@ -94,7 +94,7 @@ class ComponentBuilder extends AbstractBuilder {
         if (cl == null) {
             button = new Button(text)
         } else {
-            button = new Button(text, cl)
+            button = new Button(text, cl.clone())
         }
 
         addComponent(attr, button)
@@ -125,7 +125,7 @@ class ComponentBuilder extends AbstractBuilder {
             cb.readOnly = !attr.writeable
 
         if (cl != null) {
-            cb.addListener(cl)
+            cb.addListener(cl.clone())
         }
 
         addComponent(attr, cb)
