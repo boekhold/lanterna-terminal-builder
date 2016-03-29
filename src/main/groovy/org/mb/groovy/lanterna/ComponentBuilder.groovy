@@ -3,25 +3,24 @@ package org.mb.groovy.lanterna
 import com.googlecode.lanterna.gui2.BorderLayout
 import com.googlecode.lanterna.gui2.Component
 import com.googlecode.lanterna.gui2.Label
-import com.googlecode.lanterna.gui2.LayoutData
 import com.googlecode.lanterna.gui2.Panel
 
-
 class ComponentBuilder extends AbstractBuilder {
-    private Panel panel
+    final private Panel panel
     BorderLayout.Location location = null
 
-    ComponentBuilder(Panel panel, BorderLayout.Location location) {
+    ComponentBuilder(Map<String, Component> registry, Panel panel, BorderLayout.Location location) {
+        this.registry = registry
         this.panel = panel
         this.component = panel
         this.location = location
     }
 
-    ComponentBuilder(Panel panel) {
-        this(panel, null)
+    ComponentBuilder(Map<String, Component> registry, Panel panel) {
+        this(registry, panel, null)
     }
 
-    private void addComponent(Component c) {
+    private void addComponent(Map attr, Component c) {
         if (location) {
             if (panel.children?.any { ((BorderLayout.Location)it.layoutData) == location })
                 throw new LanternaBuilderException(location.toString() + ' location already contains a component')
@@ -30,6 +29,7 @@ class ComponentBuilder extends AbstractBuilder {
         } else {
             panel.addComponent(c)
         }
+        registerComponent(attr, c)
     }
 
     void panel(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PanelBuilder) Closure cl) {
@@ -37,16 +37,16 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     void panel(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PanelBuilder) Closure cl) {
-        PanelBuilder builder = new PanelBuilder(attr)
+        PanelBuilder builder = new PanelBuilder(registry, attr)
         runClosure(cl, builder)
-        addComponent(builder.component)
+        addComponent(attr, builder.component)
     }
 
     void label(String text) {
-        addComponent(new Label(text))
+        label(null, text)
     }
 
-    void label(String text, Map attr) {
-
+    void label(Map attr, String text) {
+        addComponent(attr, new Label(text))
     }
 }
