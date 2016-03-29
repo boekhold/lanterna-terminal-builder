@@ -11,8 +11,7 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     gridLayout(2) {
                         label('My First Little Label')
-                        panel {
-                            border(style: 'singleLine', title: 'BorderLayout')
+                        panel(borderStyle: 'singleLine', borderTitle: 'BorderLayout') {
                             borderLayout {
                                 top {
                                     label 'TOP'
@@ -86,9 +85,10 @@ public class LanternaTerminalBuilderTest {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     linearLayout() {
-                        textBox(size: 10, 'Hello World')
-                        textBox(size: [10,2], 'Hello\n  World')
-                        textBox(size: 10, validationPattern: '[0-9]+', '12345A')
+                        textBox(id: 'tb1', size: 20, 'Hello World')
+                        textBox(size: 20, registry.tb1.text)
+                        textBox(size: [20,2], 'Hello\n  World')
+                        textBox(size: 20, validationPattern: '[0-9]+', '12345A')
                         // the above should throw an exception as per the Lanterna docs,
                         // but it doesn't
                     }
