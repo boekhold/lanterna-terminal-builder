@@ -12,6 +12,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import com.googlecode.lanterna.terminal.Terminal
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame
 
+import javax.swing.WindowConstants
+
 class LanternaTerminal {
     private Screen screen
     private MultiWindowTextGUI gui
@@ -23,15 +25,11 @@ class LanternaTerminal {
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
 
         if (terminal instanceof SwingTerminalFrame)
-            ((SwingTerminalFrame)terminal).defaultCloseOperation = javax.swing.WindowConstants.DISPOSE_ON_CLOSE
+            ((SwingTerminalFrame)terminal).defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         screen = new TerminalScreen(terminal);
         screen.startScreen();
         gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
-    }
-
-    void window(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = WindowBuilder) Closure cl) {
-        window(null, cl)
     }
 
     void window(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = WindowBuilder) Closure cl) {
