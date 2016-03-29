@@ -79,4 +79,23 @@ public class LanternaTerminalBuilderTest {
         assert terminal.registry['mainWindow'].collect { k, v -> k } == ['label1', 'label2']
         assert terminal.registry['subWindow'].collect { k, v -> k } == ['label1', 'label2']
     }
+
+    @Ignore @Test
+    public void testTextBox() {
+        def terminal = new LanternaTerminalBuilder().terminal() {
+            window(id: 'mainWindow', title: 'My First Window') {
+                panel {
+                    linearLayout() {
+                        textBox(size: 10, 'Hello World')
+                        textBox(size: [10,2], 'Hello\n  World')
+                        textBox(size: 10, validationPattern: '[0-9]+', '12345A')
+                        // the above should throw an exception as per the Lanterna docs,
+                        // but it doesn't
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('mainWindow')
+    }
 }

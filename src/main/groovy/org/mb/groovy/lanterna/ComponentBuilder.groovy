@@ -1,9 +1,9 @@
 package org.mb.groovy.lanterna
 
-import com.googlecode.lanterna.gui2.BorderLayout
-import com.googlecode.lanterna.gui2.Component
-import com.googlecode.lanterna.gui2.Label
-import com.googlecode.lanterna.gui2.Panel
+import com.googlecode.lanterna.TerminalSize
+import com.googlecode.lanterna.gui2.*
+
+import java.util.regex.Pattern
 
 class ComponentBuilder extends AbstractBuilder {
     final private Panel panel
@@ -47,6 +47,45 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     void label(Map attr, String text) {
-        addComponent(attr, new Label(text))
+        Component c = new Label(text)
+        addComponent(attr, addBorder(c, attr))
+    }
+
+    void textBox(Map attr) {
+        textBox(attr, null)
+    }
+
+    void textBox(Map attr, String defaultText) {
+        TerminalSize size
+
+        if (!attr.size)
+            throw new LanternaBuilderException('size specification is required')
+
+        if (attr.size instanceof List) {
+            def sl = attr.size as List
+            if (sl*.class == [Integer, Integer]) {
+                size = new TerminalSize(sl[0] as int, sl[1] as int)
+            } else {
+                throw new LanternaBuilderException('size specification invalid: requires 2 list elements of type int')
+            }
+        } else if (attr.size instanceof Integer) {
+            size = new TerminalSize((int)attr.size, 1)
+        } else {
+            throw new LanternaBuilderException('size specification invalid')
+        }
+
+        TextBox box
+        if (defaultText) {
+            box = new TextBox(size, defaultText)
+        } else {
+            box = new TextBox(size)
+        }
+
+        if (attr.validationPattern) {
+            def pattern = Pattern.compile(attr.validationPattern as String)
+            box.setValidationPattern(pattern)
+        }
+
+        addComponent(attr, addBorder(box, attr))
     }
 }

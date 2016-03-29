@@ -8,32 +8,8 @@ class PanelBuilder extends AbstractBuilder {
     PanelBuilder(Map<String, Component> registry, Map attr) {
         this.registry = registry
         this.panel = new Panel()
-        this.component = this.panel // default
+        this.component = addBorder(panel, attr)
         registerComponent(attr, panel)
-    }
-
-    void border(Map attr) {
-        if (!attr.style)
-            throw new LanternaBuilderException("'style' attribute is mandatory for border")
-
-        def title = attr.title ?: ''
-        def border
-        switch (attr.style) {
-            case 'singleLine':
-                border = Borders.singleLine(title)
-                break
-            case 'singleLineBevel':
-                border = Borders.singleLineBevel(title)
-                break
-            case 'doubleLine':
-                border = Borders.doubleLine(title)
-                break
-            case 'doubleLineBevel':
-                border = Borders.doubleLineBevel(title)
-                break
-            default: border = Borders.singleLine()
-        }
-        component = panel.withBorder(border)
     }
 
     void gridLayout(int cols, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ComponentBuilder) Closure cl) {
