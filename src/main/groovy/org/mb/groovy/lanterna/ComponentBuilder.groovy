@@ -197,4 +197,37 @@ class ComponentBuilder extends AbstractBuilder {
         addComponent(attr, box)
     }
 
+    public void radioBoxList(Collection coll) {
+        radioBoxList(null, coll, null)
+    }
+
+    public void radioBoxList(Map attr, Collection coll) {
+        radioBoxList(attr, coll, null)
+    }
+
+    public void radioBoxList(Collection coll, Closure cl) {
+        radioBoxList(null, coll, cl)
+    }
+
+    public void radioBoxList(Map attr, Collection coll, Closure cl) {
+        TerminalSize size = getSize(attr)
+        RadioBoxList box = new RadioBoxList()
+
+        coll.each { box.addItem(it) }
+
+        if (size)
+            box.preferredSize = size
+
+        // Doesn't seem to work at the moment (3.0.0-beta2)
+        if (cl)
+            box.addListener(cl)
+
+        if (attr?.checked)
+            box.setCheckedItem(attr.checked)
+
+        if (attr?.checkedByIndex instanceof Number)
+            box.setCheckedItemIndex(attr.checkedByIndex as int)
+
+        addComponent(attr, box)
+    }
 }
