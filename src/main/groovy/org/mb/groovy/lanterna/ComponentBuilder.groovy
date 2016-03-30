@@ -130,4 +130,9 @@ class ComponentBuilder extends AbstractBuilder {
 
         addComponent(attr, cb)
     }
+
+    public void emptySpace() {
+        addComponent(null, new EmptySpace(new TerminalSize(0,0)))
+    }
+
 }

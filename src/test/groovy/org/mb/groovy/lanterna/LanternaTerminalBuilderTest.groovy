@@ -144,4 +144,24 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('mainWindow')
     }
+
+    @Ignore @Test
+    public void testEmptySpace() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'Empty Space Test') {
+                panel {
+                    gridLayout(2) {
+                        label('label 1')
+                        emptySpace()
+                        label('label 2, should show under label 1')
+                        label('label3')
+                        emptySpace()
+                        label('Should show under label 3')
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }
