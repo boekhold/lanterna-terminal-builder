@@ -135,4 +135,31 @@ class ComponentBuilder extends AbstractBuilder {
         addComponent(null, new EmptySpace(new TerminalSize(0,0)))
     }
 
+    public void checkBox(String label) {
+        checkBox(null, label, null)
+    }
+
+    public void checkBox(Map attr, String label) {
+        checkBox(attr, label, null)
+    }
+
+    public void checkBox(String label, Closure cl) {
+        checkBox(null, label, cl)
+    }
+
+    public void checkBox(Map attr, String label, Closure cl) {
+        TerminalSize size = getSize(attr)
+        CheckBox box = new CheckBox(label)
+
+        if (size)
+            box.preferredSize = size
+
+        if (cl)
+            box.addListener(cl)
+
+        if (attr?.checked == true)
+            box.checked = attr.checked
+
+        addComponent(attr, box)
+    }
 }

@@ -164,4 +164,25 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testCheckBox() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'CheckBox Test') {
+                panel {
+                    gridLayout(2) {
+                        checkBox('Simple')
+                        checkBox(size: [15,2], 'With Size')
+                        checkBox(checked: true, 'Checked')
+                        checkBox(checked: false, 'Unchecked')
+                        checkBox('With Action') { checked ->
+                            println "Box is checked: $checked"
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }
