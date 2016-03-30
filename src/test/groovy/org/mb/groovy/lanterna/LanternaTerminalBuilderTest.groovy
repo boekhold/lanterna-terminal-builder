@@ -185,4 +185,29 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testCheckBoxList() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'CheckBoxList Test') {
+                panel {
+                    gridLayout(2) {
+                        label('Size 15x2')
+                        def l1 = ['Item 1', 'Item 2', 'Item 3']
+                        checkBoxList(size: [15, 2], l1)
+                        label('No Size')
+                        checkBoxList(l1)
+                        label('With Action')
+                        checkBoxList(l1) { idx, checked ->
+                            println "item at index $idx is ${checked ? 'checked' : 'unchecked'}"
+                        }
+                        label('With item 1 & 3 checked')
+                        checkBoxList(checked: [l1[0], l1[2]], l1)
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }

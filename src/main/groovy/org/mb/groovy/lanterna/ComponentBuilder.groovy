@@ -162,4 +162,39 @@ class ComponentBuilder extends AbstractBuilder {
 
         addComponent(attr, box)
     }
+
+    public void checkBoxList(Collection coll) {
+        checkBoxList(null, coll, null)
+    }
+
+    public void checkBoxList(Map attr, Collection coll) {
+        checkBoxList(attr, coll, null)
+    }
+
+    public void checkBoxList(Collection coll, Closure cl) {
+        checkBoxList(null, coll, cl)
+    }
+
+    public void checkBoxList(Map attr, Collection coll, Closure cl) {
+        TerminalSize size = getSize(attr)
+        CheckBoxList box = new CheckBoxList()
+
+        coll.each { box.addItem(it) }
+
+        if (size)
+            box.preferredSize = size
+
+        if (cl)
+            box.addListener(cl)
+
+        if (attr?.checked instanceof Collection) {
+            Collection checkedList = attr.checked as Collection
+            checkedList.each {
+                box.setChecked(it, true)
+            }
+        }
+
+        addComponent(attr, box)
+    }
+
 }
