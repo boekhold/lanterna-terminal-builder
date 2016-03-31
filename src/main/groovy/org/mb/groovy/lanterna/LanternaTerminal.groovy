@@ -2,10 +2,9 @@ package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.TextColor
-import com.googlecode.lanterna.gui2.DefaultWindowManager
-import com.googlecode.lanterna.gui2.EmptySpace
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI
-import com.googlecode.lanterna.gui2.TextGUI
+import com.googlecode.lanterna.graphics.PropertiesTheme
+import com.googlecode.lanterna.graphics.Theme
+import com.googlecode.lanterna.gui2.*
 import com.googlecode.lanterna.gui2.dialogs.*
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.screen.Screen
@@ -13,8 +12,9 @@ import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import com.googlecode.lanterna.terminal.Terminal
 
-import javax.swing.*
-import java.awt.*
+import javax.swing.JFrame
+import javax.swing.WindowConstants
+import java.awt.Frame
 import java.util.regex.Pattern
 
 class LanternaTerminal {
@@ -22,6 +22,7 @@ class LanternaTerminal {
     private MultiWindowTextGUI gui
     private Map<String, LanternaWindow> windows = [:]
     private TextGUI.Listener keyListener
+    private boolean isBareTerminal = false
 
     LanternaTerminal(Map attr) {
         // Setup terminal and screen layers
@@ -39,12 +40,30 @@ class LanternaTerminal {
 
         screen = new TerminalScreen(terminal);
         screen.startScreen();
-        gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
+
+        if (attr?.bareTerminal instanceof Boolean && attr.bareTerminal as boolean) {
+            gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(new EmptyWindowDecorationRenderer()), new EmptySpace(TextColor.ANSI.DEFAULT))
+            gui.theme = loadMinimalTheme()
+            isBareTerminal = true
+        } else {
+            gui = new MultiWindowTextGUI(screen);
+        }
+    }
+
+    Theme loadMinimalTheme() {
+        Properties p = new Properties()
+        InputStream is = this.class.classLoader.getResourceAsStream('minimal-theme.properties')
+        p.load(is)
+        Theme theme = new PropertiesTheme(p)
+        return theme
     }
 
     void window(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = WindowBuilder) Closure cl) {
         if (!attr.id)
             throw new LanternaBuilderException("'id' attribute is mandatory for windows")
+
+        if (isBareTerminal)
+            attr.bareTerminal = true
 
         WindowBuilder builder = new WindowBuilder(this, attr)
 
@@ -53,6 +72,7 @@ class LanternaTerminal {
         code()
 
         windows[attr.id as String] = builder.window
+
         gui.addWindow(builder.window.underlying);
     }
 
@@ -121,9 +141,9 @@ class LanternaTerminal {
             if (size)
                 dialogBuilder.textBoxSize = size
             if (attr?.title)
-                dialogBuilder.title = attr.title as String
+                dialogBuilder.setTitle(attr.title as String)
             if (attr?.description)
-                dialogBuilder.description = attr.description as String
+                dialogBuilder.setDescription(attr.description as String)
             if (attr?.validationPattern) {
                 // also need an errorMessage then!
                 if (!attr.errorMessage)
@@ -154,7 +174,7 @@ class LanternaTerminal {
             if (attr?.title)
                 builder.setTitle(attr.title as String)
             if (attr?.description)
-                builder.description = attr.description as String
+                builder.setDescription(attr.description as String)
             if (attr?.actionLabel)
                 builder.actionLabel = attr.actionLabel as String
             if (attr?.showHidden)
@@ -182,7 +202,7 @@ class LanternaTerminal {
             if (attr?.title)
                 dialogBuilder.setTitle(attr.title as String)
             if (attr?.description)
-                dialogBuilder.description = attr.description as String
+                dialogBuilder.setDescription(attr.description as String)
 
             ActionListDialogBuilderImpl builder = new ActionListDialogBuilderImpl(dialogBuilder)
             Closure code = cl.rehydrate(builder, this, this)

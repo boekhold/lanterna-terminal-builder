@@ -57,7 +57,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testComponentRegistration() {
-        def terminal = new LanternaTerminalBuilder().terminal() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     gridLayout(2) {
@@ -82,7 +82,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testTextBox() {
-        def terminal = new LanternaTerminalBuilder().terminal() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     linearLayout() {
@@ -102,7 +102,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testButton() {
-        def terminal = new LanternaTerminalBuilder().terminal() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     linearLayout() {
@@ -121,7 +121,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testComboBox() {
-        def terminal = new LanternaTerminalBuilder().terminal() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
                     gridLayout(2) {
@@ -148,7 +148,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testEmptySpace() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'Empty Space Test') {
                 panel {
                     gridLayout(2) {
@@ -168,7 +168,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testCheckBox() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBox Test') {
                 panel {
                     gridLayout(2) {
@@ -189,7 +189,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testCheckBoxList() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBoxList Test') {
                 panel {
                     gridLayout(2) {
@@ -214,7 +214,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testRadioBoxList() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBoxList Test') {
                 panel {
                     gridLayout(2) {
@@ -241,7 +241,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testActionListBox() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListBox Test') {
                 panel {
                     gridLayout(2) {
@@ -280,7 +280,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testMessageDialog() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'MessageDialog Test') {
                 panel {
                     linearLayout {
@@ -304,7 +304,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testTextInputDialog() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'TextInputDialog Test') {
                 panel {
                     linearLayout {
@@ -329,7 +329,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testFileDialog() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'FileDialog Test') {
                 panel {
                     linearLayout {
@@ -358,7 +358,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testActionListDialog() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
                 panel {
                     linearLayout {
@@ -396,7 +396,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testOnKey() {
-        def terminal = new LanternaTerminalBuilder().terminal {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
                 panel {
                     linearLayout {
@@ -413,5 +413,39 @@ public class LanternaTerminalBuilderTest {
         }
 
         terminal.waitFor('main')
+    }
+
+    @Ignore @Test
+    public void testMinimalTheme() {
+        def terminal = new LanternaTerminalBuilder().terminal(title: 'Main Frame', bareTerminal: true) {
+            window(id: 'mainWindow', title: 'My First Window') {
+                panel {
+                    gridLayout(2) {
+                        label('My First Little Label')
+                        panel(borderStyle: 'singleLine', borderTitle: 'BorderLayout') {
+                            borderLayout {
+                                top {
+                                    label 'TOP'
+                                }
+                                right {
+                                    label 'RIGHT'
+                                }
+                                bottom {
+                                    label 'BOTTOM'
+                                }
+                                left {
+                                    label 'LEFT'
+                                }
+                                center {
+                                    label 'CENTER'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('mainWindow')
     }
 }

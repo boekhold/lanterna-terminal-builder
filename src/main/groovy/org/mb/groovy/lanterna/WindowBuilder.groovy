@@ -1,6 +1,7 @@
 package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.gui2.BasicWindow
+import com.googlecode.lanterna.gui2.Window
 
 class WindowBuilder {
     final private LanternaWindow window = new LanternaWindow()
@@ -9,8 +10,13 @@ class WindowBuilder {
         window.underlying = new BasicWindow()
         window.terminal = terminal
 
+        Collection<Window.Hint> hints = []
+
         if (attr?.title)
             window.underlying.title = attr.title
+        if (attr?.bareTerminal && attr.bareTerminal as boolean)
+            hints << Window.Hint.FULL_SCREEN
+        window.underlying.hints = hints
     }
 
     LanternaWindow getWindow() {
