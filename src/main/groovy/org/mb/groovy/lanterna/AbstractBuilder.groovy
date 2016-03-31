@@ -5,7 +5,7 @@ import com.googlecode.lanterna.gui2.Borders
 import com.googlecode.lanterna.gui2.Component
 
 abstract class AbstractBuilder {
-    protected Map<String, Component> registry
+    protected LanternaWindow window
     protected Component component
 
     protected Component getComponent() {
@@ -63,10 +63,31 @@ abstract class AbstractBuilder {
         if (!attr?.id)
             return
 
-        if (registry.containsKey(attr.id))
+        if (window.components.containsKey(attr.id as String))
             throw new LanternaBuilderException("component with id '${attr.id}' is already registered")
 
-        registry[(String)attr.id] = c
+        window.components[attr.id as String] = c
+    }
+
+    /**
+     * for shortcut access to the components of this underlying
+     */
+    Map<String, Component> getComponents() {
+        return window.components
+    }
+
+    /**
+     *
+     */
+    LanternaTerminal getTerminal() {
+        return window.terminal
+    }
+
+    /**
+     *
+     */
+    LanternaWindow getWindow() {
+        return window
     }
 
     protected void runClosure(Closure cl, AbstractBuilder builder) {

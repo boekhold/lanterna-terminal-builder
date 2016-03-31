@@ -1,20 +1,19 @@
 package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.gui2.BorderLayout
-import com.googlecode.lanterna.gui2.Component
 import com.googlecode.lanterna.gui2.Panel
 
 class BorderLayoutBuilder extends AbstractBuilder {
     final private Panel panel
 
-    BorderLayoutBuilder(Map<String, Component> registry, Panel panel) {
-        this.registry = registry
+    BorderLayoutBuilder(LanternaWindow window, Panel panel) {
+        this.window = window
         this.panel = panel
         this.component = panel
     }
 
     private void applyBuilder(Closure cl, BorderLayout.Location location) {
-        ComponentBuilder builder = new ComponentBuilder(registry, panel, location)
+        ComponentBuilder builder = new ComponentBuilder(window, panel, location)
         runClosure(cl, builder)
     }
 

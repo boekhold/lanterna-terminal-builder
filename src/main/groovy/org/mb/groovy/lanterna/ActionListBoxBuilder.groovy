@@ -2,14 +2,12 @@ package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.gui2.ActionListBox
-import com.googlecode.lanterna.gui2.Component
-
 
 class ActionListBoxBuilder extends AbstractBuilder {
     private ActionListBox listBox
 
-    public ActionListBoxBuilder(Map<String, Component> registry, Map attr) {
-        this.registry = registry
+    public ActionListBoxBuilder(LanternaWindow window, Map attr) {
+        this.window = window
 
         TerminalSize size = getSize(attr)
         if (size)

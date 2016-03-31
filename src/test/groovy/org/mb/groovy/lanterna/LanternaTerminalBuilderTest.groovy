@@ -51,7 +51,7 @@ public class LanternaTerminalBuilderTest {
             }
         }
 
-        terminal.windows['mainWindow'].waitUntilClosed()
+        terminal.waitFor('mainWindow')
     }
 
     @Ignore @Test
@@ -75,8 +75,8 @@ public class LanternaTerminalBuilderTest {
             }
         }
 
-        assert terminal.registry['mainWindow'].collect { k, v -> k } == ['label1', 'label2']
-        assert terminal.registry['subWindow'].collect { k, v -> k } == ['label1', 'label2']
+        assert terminal.windows['mainWindow'].components.collect { k, v -> k } == ['label1', 'label2']
+        assert terminal.windows['subWindow'].components.collect { k, v -> k } == ['label1', 'label2']
     }
 
     @Ignore @Test
@@ -86,7 +86,7 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     linearLayout() {
                         textBox(id: 'tb1', size: 20, 'Hello World')
-                        textBox(size: 20, registry.tb1.text)
+                        textBox(size: 20, components.tb1.text)
                         textBox(size: [20,2], 'Hello\n  World')
                         textBox(size: 20, validationPattern: '[0-9]+', '12345A')
                         // the above should throw an exception as per the Lanterna docs,
@@ -108,7 +108,7 @@ public class LanternaTerminalBuilderTest {
                         textBox(id: 'tb1', size: 20, 'Value to print')
                         label('Click below')
                         button('Click Me') {
-                            println registry.tb1.text
+                            println components.tb1.text
                         }
                     }
                 }
@@ -253,7 +253,7 @@ public class LanternaTerminalBuilderTest {
                                 println 'Action 2'
                             }
                             action('Action 3') {
-                                println "Text of Label: ${registry.label1.text}"
+                                println "Text of Label: ${components.label1.text}"
                             }
                         }
 
@@ -266,7 +266,7 @@ public class LanternaTerminalBuilderTest {
                                 println 'Action 2'
                             }
                             action('Action 3') {
-                                println "Text of Label: ${registry.label2.text}"
+                                println "Text of Label: ${components.label2.text}"
                             }
                         }
                     }

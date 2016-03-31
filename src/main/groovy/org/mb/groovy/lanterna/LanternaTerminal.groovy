@@ -1,7 +1,9 @@
 package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TextColor
-import com.googlecode.lanterna.gui2.*
+import com.googlecode.lanterna.gui2.DefaultWindowManager
+import com.googlecode.lanterna.gui2.EmptySpace
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
@@ -13,8 +15,7 @@ import java.awt.*
 class LanternaTerminal {
     private Screen screen
     private MultiWindowTextGUI gui
-    private Map<String, Window> windows = [:]
-    private Map<String, Map<String, Component>> registry = [:]
+    private Map<String, LanternaWindow> windows = [:]
 
     LanternaTerminal(Map attr) {
         // Setup terminal and screen layers
@@ -39,26 +40,21 @@ class LanternaTerminal {
         if (!attr.id)
             throw new LanternaBuilderException("'id' attribute is mandatory for windows")
 
-        registry[attr.id as String] = [:]
-        WindowBuilder builder = new WindowBuilder(registry[attr.id as String], attr)
+        WindowBuilder builder = new WindowBuilder(this, attr)
 
         Closure code = cl.rehydrate(builder, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY
         code()
 
         windows[attr.id as String] = builder.window
-        gui.addWindow(builder.window);
+        gui.addWindow(builder.window.underlying);
     }
 
-    Map<String, Window> getWindows() {
+    Map<String, LanternaWindow> getWindows() {
         return windows
     }
 
-    Map<String, Map<String, Component>> getRegistry() {
-        return registry
-    }
-
     void waitFor(String id) {
-        windows[id]?.waitUntilClosed()
+        windows[id]?.underlying?.waitUntilClosed()
     }
 }

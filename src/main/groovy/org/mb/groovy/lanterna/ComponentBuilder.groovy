@@ -9,15 +9,15 @@ class ComponentBuilder extends AbstractBuilder {
     final private Panel panel
     BorderLayout.Location location = null
 
-    ComponentBuilder(Map<String, Component> registry, Panel panel, BorderLayout.Location location) {
-        this.registry = registry
+    ComponentBuilder(LanternaWindow window, Panel panel, BorderLayout.Location location) {
+        this.window = window
         this.panel = panel
         this.component = panel
         this.location = location
     }
 
-    ComponentBuilder(Map<String, Component> registry, Panel panel) {
-        this(registry, panel, null)
+    ComponentBuilder(LanternaWindow window, Panel panel) {
+        this(window, panel, null)
     }
 
     private void addComponent(Map attr, Component c) {
@@ -37,7 +37,7 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     void panel(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PanelBuilder) Closure cl) {
-        PanelBuilder builder = new PanelBuilder(registry, attr)
+        PanelBuilder builder = new PanelBuilder(window, attr)
         runClosure(cl, builder)
         addComponent(attr, builder.component)
     }
@@ -236,7 +236,7 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     public void actionListBox(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListBoxBuilder) Closure cl) {
-        ActionListBoxBuilder builder = new ActionListBoxBuilder(registry, attr)
+        ActionListBoxBuilder builder = new ActionListBoxBuilder(window, attr)
         runClosure(cl, builder)
         addComponent(attr, builder.component)
     }
