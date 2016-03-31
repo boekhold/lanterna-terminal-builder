@@ -70,7 +70,7 @@ class ComponentBuilder extends AbstractBuilder {
 
         if (attr.validationPattern) {
             def pattern = Pattern.compile(attr.validationPattern as String)
-            box.setValidationPattern(pattern)
+            box.validationPattern = pattern
         }
 
         addComponent(attr, addBorder(box, attr))

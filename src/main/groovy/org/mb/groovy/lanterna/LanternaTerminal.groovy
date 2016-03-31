@@ -1,11 +1,13 @@
 package org.mb.groovy.lanterna
 
+import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.DefaultWindowManager
 import com.googlecode.lanterna.gui2.EmptySpace
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
@@ -13,6 +15,7 @@ import com.googlecode.lanterna.terminal.Terminal
 
 import javax.swing.*
 import java.awt.*
+import java.util.regex.Pattern
 
 class LanternaTerminal {
     private Screen screen
@@ -65,7 +68,7 @@ class LanternaTerminal {
         dialogBuilder.text = text
 
         if (attr?.title)
-            dialogBuilder.setTitle(attr.title as String)
+            dialogBuilder.title = attr.title as String
         if (attr?.button) {
             // will throw an IllegalArgumentException if the user of the DSL
             // specified an invalid button name!
@@ -81,5 +84,27 @@ class LanternaTerminal {
         }
 
         return dialogBuilder.build().showDialog(gui).toString()
+    }
+
+    String textInputDialog(Map attr) {
+        TextInputDialogBuilder dialogBuilder = new TextInputDialogBuilder()
+
+        TerminalSize size = AbstractBuilder.getSize(attr)
+        if (size)
+            dialogBuilder.textBoxSize = size
+        if (attr?.title)
+            dialogBuilder.title = attr.title as String
+        if (attr?.description)
+            dialogBuilder.description = attr.description as String
+        if (attr?.validationPattern) {
+            // also need an errorMessage then!
+            if (!attr.errorMessage)
+                throw new LanternaBuilderException('errorMessage is required when using validationPattern')
+
+            def pattern = Pattern.compile(attr.validationPattern as String)
+            dialogBuilder.setValidationPattern(pattern, attr.errorMessage as String)
+        }
+
+        return dialogBuilder.build().showDialog(gui)
     }
 }

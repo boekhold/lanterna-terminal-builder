@@ -299,4 +299,29 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testTextInputDialog() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'CheckBoxList Test') {
+                panel {
+                    linearLayout {
+                        button('Click me for an input dialog') {
+                            println textInputDialog(title: 'Input', description: 'Free-form input', size: [30, 10])
+                        }
+                        button('Click me for a number input dialog') {
+                            println textInputDialog(
+                                title: 'Number input',
+                                description: 'Numbers only please!',
+                                validationPattern: '[0-9]*',
+                                errorMessage: 'Thats not a number!'
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }

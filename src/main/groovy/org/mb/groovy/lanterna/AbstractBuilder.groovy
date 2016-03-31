@@ -94,6 +94,10 @@ abstract class AbstractBuilder {
         window.terminal.messageDialog(attr, text)
     }
 
+    String textInputDialog(Map attr) {
+        window.terminal.textInputDialog(attr)
+    }
+
     protected void runClosure(Closure cl, AbstractBuilder builder) {
         Closure code = cl.rehydrate(builder, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY
