@@ -237,4 +237,43 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testActionListBox() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'ActionListBox Test') {
+                panel {
+                    gridLayout(2) {
+                        label(id: 'label1', 'Size 15x2')
+                        actionListBox {
+                            action('Action 1') {
+                                println 'Action 1'
+                            }
+                            action('Action 2') {
+                                println 'Action 2'
+                            }
+                            action('Action 3') {
+                                println "Text of Label: ${registry.label1.text}"
+                            }
+                        }
+
+                        label(id: 'label2', 'No Size')
+                        actionListBox {
+                            action('Action 1') {
+                                println 'Action 1'
+                            }
+                            action('Action 2') {
+                                println 'Action 2'
+                            }
+                            action('Action 3') {
+                                println "Text of Label: ${registry.label2.text}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }

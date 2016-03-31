@@ -230,4 +230,14 @@ class ComponentBuilder extends AbstractBuilder {
 
         addComponent(attr, box)
     }
+
+    public void actionListBox(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListBoxBuilder) Closure cl) {
+        actionListBox(null, cl)
+    }
+
+    public void actionListBox(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListBoxBuilder) Closure cl) {
+        ActionListBoxBuilder builder = new ActionListBoxBuilder(registry, attr)
+        runClosure(cl, builder)
+        addComponent(attr, builder.component)
+    }
 }

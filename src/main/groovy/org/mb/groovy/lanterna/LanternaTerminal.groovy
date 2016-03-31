@@ -1,18 +1,14 @@
 package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TextColor
-import com.googlecode.lanterna.gui2.Component
-import com.googlecode.lanterna.gui2.DefaultWindowManager
-import com.googlecode.lanterna.gui2.EmptySpace
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI
-import com.googlecode.lanterna.gui2.Window
+import com.googlecode.lanterna.gui2.*
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
 import com.googlecode.lanterna.terminal.Terminal
 
 import javax.swing.*
-import java.awt.Frame
+import java.awt.*
 
 class LanternaTerminal {
     private Screen screen
@@ -43,14 +39,14 @@ class LanternaTerminal {
         if (!attr.id)
             throw new LanternaBuilderException("'id' attribute is mandatory for windows")
 
-        registry[(String)attr.id] = [:]
-        WindowBuilder builder = new WindowBuilder(registry[(String)attr.id], attr)
+        registry[attr.id as String] = [:]
+        WindowBuilder builder = new WindowBuilder(registry[attr.id as String], attr)
 
         Closure code = cl.rehydrate(builder, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY
         code()
 
-        windows[(String)attr.id] = builder.window
+        windows[attr.id as String] = builder.window
         gui.addWindow(builder.window);
     }
 
