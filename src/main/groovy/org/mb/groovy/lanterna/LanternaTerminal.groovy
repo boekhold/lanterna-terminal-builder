@@ -5,6 +5,7 @@ import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.DefaultWindowManager
 import com.googlecode.lanterna.gui2.EmptySpace
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI
+import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder
@@ -106,5 +107,29 @@ class LanternaTerminal {
         }
 
         return dialogBuilder.build().showDialog(gui)
+    }
+
+    File fileDialog(File file) {
+        fileDialog(null, file)
+    }
+
+    File fileDialog(Map attr, File file) {
+        FileDialogBuilder builder = new FileDialogBuilder()
+
+        TerminalSize size = AbstractBuilder.getSize(attr)
+        if (size)
+            builder.suggestedSize = size
+        if (attr?.title)
+            builder.setTitle(attr.title as String)
+        if (attr?.description)
+            builder.description = attr.description as String
+        if (attr?.actionLabel)
+            builder.actionLabel = attr.actionLabel as String
+        if (attr?.showHidden)
+            builder.showHiddenDirectories = attr.showHidden as boolean
+
+        builder.selectedFile = file
+
+        return builder.build().showDialog(gui)
     }
 }

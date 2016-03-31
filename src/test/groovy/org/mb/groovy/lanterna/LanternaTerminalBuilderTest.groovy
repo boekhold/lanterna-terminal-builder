@@ -280,7 +280,7 @@ public class LanternaTerminalBuilderTest {
     @Ignore @Test
     public void testMessageDialog() {
         def terminal = new LanternaTerminalBuilder().terminal {
-            window(id: 'main', title: 'CheckBoxList Test') {
+            window(id: 'main', title: 'MessageDialog Test') {
                 panel {
                     linearLayout {
                         button('Click me for an OK dialog') {
@@ -303,7 +303,7 @@ public class LanternaTerminalBuilderTest {
     @Ignore @Test
     public void testTextInputDialog() {
         def terminal = new LanternaTerminalBuilder().terminal {
-            window(id: 'main', title: 'CheckBoxList Test') {
+            window(id: 'main', title: 'TextInputDialog Test') {
                 panel {
                     linearLayout {
                         button('Click me for an input dialog') {
@@ -316,6 +316,35 @@ public class LanternaTerminalBuilderTest {
                                 validationPattern: '[0-9]*',
                                 errorMessage: 'Thats not a number!'
                             )
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
+
+    @Ignore @Test
+    public void testFileDialog() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'FileDialog Test') {
+                panel {
+                    linearLayout {
+                        button('Click me for a file dialog') {
+                            def file = fileDialog(new File('C:/'))
+                            println file.absolutePath
+                        }
+                        button('Click me for a more complex file dialog') {
+                            def file = fileDialog(
+                                title: 'Select a file bro!',
+                                description: 'Mak sure its a good file!',
+                                actionLabel: 'Go for it!',
+                                showHidden: true,
+                                size: [70, 24], // preferred size
+                                new File('C:/')
+                            )
+                            println file.absolutePath
                         }
                     }
                 }

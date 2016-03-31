@@ -98,6 +98,14 @@ abstract class AbstractBuilder {
         window.terminal.textInputDialog(attr)
     }
 
+    File fileDialog(File file) {
+        window.terminal.fileDialog(null, file)
+    }
+
+    File fileDialog(Map attr, File file) {
+        window.terminal.fileDialog(attr, file)
+    }
+
     protected void runClosure(Closure cl, AbstractBuilder builder) {
         Closure code = cl.rehydrate(builder, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY
