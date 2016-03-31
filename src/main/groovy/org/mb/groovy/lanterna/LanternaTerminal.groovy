@@ -4,6 +4,8 @@ import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.DefaultWindowManager
 import com.googlecode.lanterna.gui2.EmptySpace
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
@@ -56,5 +58,28 @@ class LanternaTerminal {
 
     void waitFor(String id) {
         windows[id]?.underlying?.waitUntilClosed()
+    }
+
+    String messageDialog(Map attr, String text) {
+        MessageDialogBuilder dialogBuilder = new MessageDialogBuilder()
+        dialogBuilder.text = text
+
+        if (attr?.title)
+            dialogBuilder.setTitle(attr.title as String)
+        if (attr?.button) {
+            // will throw an IllegalArgumentException if the user of the DSL
+            // specified an invalid button name!
+            dialogBuilder.addButton(MessageDialogButton.valueOf(attr.button as String))
+        }
+        if (attr?.buttons instanceof Collection) {
+            def buttons = attr.buttons as Collection
+            if (buttons.every { it instanceof String} ) {
+                buttons.each {
+                    dialogBuilder.addButton(MessageDialogButton.valueOf( it as String))
+                }
+            }
+        }
+
+        return dialogBuilder.build().showDialog(gui).toString()
     }
 }

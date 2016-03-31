@@ -276,4 +276,27 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testMessageDialog() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'CheckBoxList Test') {
+                panel {
+                    linearLayout {
+                        button('Click me for an OK dialog') {
+                            println messageDialog(title: 'OK dialog', 'Should say OK')
+                        }
+                        button('Click me for a Cancel dialog') {
+                            println messageDialog(button: 'Cancel', title: 'Cancel dialog', 'Should say Cancel')
+                        }
+                        button('Click me for a dialog with 2 buttons') {
+                            println messageDialog(buttons: ['OK', 'Cancel'], 'Should say OK and Cancel')
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }
