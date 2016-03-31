@@ -5,7 +5,9 @@ import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.DefaultWindowManager
 import com.googlecode.lanterna.gui2.EmptySpace
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI
+import com.googlecode.lanterna.gui2.TextGUI
 import com.googlecode.lanterna.gui2.dialogs.*
+import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
@@ -19,6 +21,7 @@ class LanternaTerminal {
     private Screen screen
     private MultiWindowTextGUI gui
     private Map<String, LanternaWindow> windows = [:]
+    private TextGUI.Listener keyListener
 
     LanternaTerminal(Map attr) {
         // Setup terminal and screen layers
@@ -53,6 +56,16 @@ class LanternaTerminal {
         gui.addWindow(builder.window.underlying);
     }
 
+    void onKey(Closure cl) {
+        keyListener = new TextGUI.Listener() {
+            @Override
+            boolean onUnhandledKeyStroke(TextGUI textGUI, KeyStroke keyStroke) {
+                cl(keyStroke)
+            }
+        }
+        gui.addListener(keyListener)
+    }
+
     Map<String, LanternaWindow> getWindows() {
         return windows
     }
@@ -61,49 +74,69 @@ class LanternaTerminal {
         windows[id]?.underlying?.waitUntilClosed()
     }
 
-    String messageDialog(Map attr, String text) {
-        MessageDialogBuilder dialogBuilder = new MessageDialogBuilder()
-        dialogBuilder.text = text
+    private void enterModal() {
+        if (keyListener)
+            gui.removeListener(keyListener)
+    }
 
-        if (attr?.title)
-            dialogBuilder.title = attr.title as String
-        if (attr?.button) {
-            // will throw an IllegalArgumentException if the user of the DSL
-            // specified an invalid button name!
-            dialogBuilder.addButton(MessageDialogButton.valueOf(attr.button as String))
-        }
-        if (attr?.buttons instanceof Collection) {
-            def buttons = attr.buttons as Collection
-            if (buttons.every { it instanceof String} ) {
-                buttons.each {
-                    dialogBuilder.addButton(MessageDialogButton.valueOf( it as String))
+    private void leaveModal() {
+        if (keyListener)
+            gui.addListener(keyListener)
+    }
+
+    String messageDialog(Map attr, String text) {
+        enterModal()
+        try {
+            MessageDialogBuilder dialogBuilder = new MessageDialogBuilder()
+            dialogBuilder.text = text
+
+            if (attr?.title)
+                dialogBuilder.title = attr.title as String
+            if (attr?.button) {
+                // will throw an IllegalArgumentException if the user of the DSL
+                // specified an invalid button name!
+                dialogBuilder.addButton(MessageDialogButton.valueOf(attr.button as String))
+            }
+            if (attr?.buttons instanceof Collection) {
+                def buttons = attr.buttons as Collection
+                if (buttons.every { it instanceof String }) {
+                    buttons.each {
+                        dialogBuilder.addButton(MessageDialogButton.valueOf(it as String))
+                    }
                 }
             }
-        }
 
-        return dialogBuilder.build().showDialog(gui).toString()
+            return dialogBuilder.build().showDialog(gui).toString()
+        } finally {
+            leaveModal()
+        }
     }
 
     String textInputDialog(Map attr) {
-        TextInputDialogBuilder dialogBuilder = new TextInputDialogBuilder()
+        enterModal()
+        try {
+            TextInputDialogBuilder dialogBuilder = new TextInputDialogBuilder()
 
-        TerminalSize size = AbstractBuilder.getSize(attr)
-        if (size)
-            dialogBuilder.textBoxSize = size
-        if (attr?.title)
-            dialogBuilder.title = attr.title as String
-        if (attr?.description)
-            dialogBuilder.description = attr.description as String
-        if (attr?.validationPattern) {
-            // also need an errorMessage then!
-            if (!attr.errorMessage)
-                throw new LanternaBuilderException('errorMessage is required when using validationPattern')
+            TerminalSize size = AbstractBuilder.getSize(attr)
+            if (size)
+                dialogBuilder.textBoxSize = size
+            if (attr?.title)
+                dialogBuilder.title = attr.title as String
+            if (attr?.description)
+                dialogBuilder.description = attr.description as String
+            if (attr?.validationPattern) {
+                // also need an errorMessage then!
+                if (!attr.errorMessage)
+                    throw new LanternaBuilderException('errorMessage is required when using validationPattern')
 
-            def pattern = Pattern.compile(attr.validationPattern as String)
-            dialogBuilder.setValidationPattern(pattern, attr.errorMessage as String)
+                def pattern = Pattern.compile(attr.validationPattern as String)
+                dialogBuilder.setValidationPattern(pattern, attr.errorMessage as String)
+            }
+
+            return dialogBuilder.build().showDialog(gui)
+        } finally {
+            leaveModal()
         }
-
-        return dialogBuilder.build().showDialog(gui)
     }
 
     File fileDialog(File file) {
@@ -111,23 +144,28 @@ class LanternaTerminal {
     }
 
     File fileDialog(Map attr, File file) {
-        FileDialogBuilder builder = new FileDialogBuilder()
+        enterModal()
+        try {
+            FileDialogBuilder builder = new FileDialogBuilder()
 
-        TerminalSize size = AbstractBuilder.getSize(attr)
-        if (size)
-            builder.suggestedSize = size
-        if (attr?.title)
-            builder.setTitle(attr.title as String)
-        if (attr?.description)
-            builder.description = attr.description as String
-        if (attr?.actionLabel)
-            builder.actionLabel = attr.actionLabel as String
-        if (attr?.showHidden)
-            builder.showHiddenDirectories = attr.showHidden as boolean
+            TerminalSize size = AbstractBuilder.getSize(attr)
+            if (size)
+                builder.suggestedSize = size
+            if (attr?.title)
+                builder.setTitle(attr.title as String)
+            if (attr?.description)
+                builder.description = attr.description as String
+            if (attr?.actionLabel)
+                builder.actionLabel = attr.actionLabel as String
+            if (attr?.showHidden)
+                builder.showHiddenDirectories = attr.showHidden as boolean
 
-        builder.selectedFile = file
+            builder.selectedFile = file
 
-        return builder.build().showDialog(gui)
+            return builder.build().showDialog(gui)
+        } finally {
+            leaveModal()
+        }
     }
 
     void actionListDialog(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
@@ -135,21 +173,25 @@ class LanternaTerminal {
     }
 
     void actionListDialog(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
-        ActionListDialogBuilder dialogBuilder = new ActionListDialogBuilder()
+        try {
+            ActionListDialogBuilder dialogBuilder = new ActionListDialogBuilder()
 
-        TerminalSize size = AbstractBuilder.getSize(attr)
-        if (size)
-            dialogBuilder.listBoxSize = size
-        if (attr?.title)
-            dialogBuilder.setTitle(attr.title as String)
-        if (attr?.description)
-            dialogBuilder.description = attr.description as String
+            TerminalSize size = AbstractBuilder.getSize(attr)
+            if (size)
+                dialogBuilder.listBoxSize = size
+            if (attr?.title)
+                dialogBuilder.setTitle(attr.title as String)
+            if (attr?.description)
+                dialogBuilder.description = attr.description as String
 
-        ActionListDialogBuilderImpl builder = new ActionListDialogBuilderImpl(dialogBuilder)
-        Closure code = cl.rehydrate(builder, this, this)
-        code.resolveStrategy = Closure.DELEGATE_ONLY
-        code()
+            ActionListDialogBuilderImpl builder = new ActionListDialogBuilderImpl(dialogBuilder)
+            Closure code = cl.rehydrate(builder, this, this)
+            code.resolveStrategy = Closure.DELEGATE_ONLY
+            code()
 
-        dialogBuilder.build().showDialog(gui)
+            dialogBuilder.build().showDialog(gui)
+        } finally {
+            leaveModal()
+        }
     }
 }

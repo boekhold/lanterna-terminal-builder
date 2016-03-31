@@ -1,5 +1,6 @@
 package org.mb.groovy.lanterna
 
+import com.googlecode.lanterna.input.KeyStroke
 import org.junit.Ignore
 import org.junit.Test
 
@@ -387,6 +388,27 @@ public class LanternaTerminalBuilderTest {
                         }
                     }
                 }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
+
+    @Ignore @Test
+    public void testOnKey() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        label('Label 1')
+                        button('Open Dialog') {
+                            terminal.messageDialog(title: 'Model Dialog', 'Some Message')
+                        }
+                    }
+                }
+            }
+            onKey { KeyStroke keyStroke ->
+                println "Key pressed: ${keyStroke.character}"
             }
         }
 
