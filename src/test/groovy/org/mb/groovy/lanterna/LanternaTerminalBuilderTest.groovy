@@ -353,4 +353,42 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testActionListDialog() {
+        def terminal = new LanternaTerminalBuilder().terminal {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        button('Click me for an action list dialog') {
+                            actionListDialog {
+                                action('Print foobar') {
+                                    println 'foobar'
+                                }
+                                action('Print barfoo') {
+                                    println 'barfoo'
+                                }
+                            }
+                        }
+                        button('Click me for a more complex action list dialog') {
+                            actionListDialog(
+                                title: 'Foobar Printer',
+                                description: 'Allows you to print something',
+                                size: [20, 5]
+                            ) {
+                                action('Print foobar') {
+                                    println 'foobar'
+                                }
+                                action('Print barfoo') {
+                                    println 'barfoo'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }

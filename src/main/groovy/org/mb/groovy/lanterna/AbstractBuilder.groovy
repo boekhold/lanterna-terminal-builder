@@ -106,6 +106,14 @@ abstract class AbstractBuilder {
         window.terminal.fileDialog(attr, file)
     }
 
+    void actionListDialog(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
+        window.terminal.actionListDialog(cl)
+    }
+
+    void actionListDialog(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
+        window.terminal.actionListDialog(attr, cl)
+    }
+
     protected void runClosure(Closure cl, AbstractBuilder builder) {
         Closure code = cl.rehydrate(builder, this, this)
         code.resolveStrategy = Closure.DELEGATE_ONLY

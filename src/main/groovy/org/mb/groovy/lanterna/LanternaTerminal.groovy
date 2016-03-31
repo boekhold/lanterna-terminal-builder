@@ -5,10 +5,7 @@ import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.DefaultWindowManager
 import com.googlecode.lanterna.gui2.EmptySpace
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI
-import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
-import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder
+import com.googlecode.lanterna.gui2.dialogs.*
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.screen.TerminalScreen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
@@ -131,5 +128,28 @@ class LanternaTerminal {
         builder.selectedFile = file
 
         return builder.build().showDialog(gui)
+    }
+
+    void actionListDialog(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
+        actionListDialog(null, cl)
+    }
+
+    void actionListDialog(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
+        ActionListDialogBuilder dialogBuilder = new ActionListDialogBuilder()
+
+        TerminalSize size = AbstractBuilder.getSize(attr)
+        if (size)
+            dialogBuilder.listBoxSize = size
+        if (attr?.title)
+            dialogBuilder.setTitle(attr.title as String)
+        if (attr?.description)
+            dialogBuilder.description = attr.description as String
+
+        ActionListDialogBuilderImpl builder = new ActionListDialogBuilderImpl(dialogBuilder)
+        Closure code = cl.rehydrate(builder, this, this)
+        code.resolveStrategy = Closure.DELEGATE_ONLY
+        code()
+
+        dialogBuilder.build().showDialog(gui)
     }
 }
