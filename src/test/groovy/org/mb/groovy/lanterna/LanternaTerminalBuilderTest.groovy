@@ -284,19 +284,20 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     linearLayout {
                         button('Click me for an OK dialog') {
-                            println messageDialog(title: 'OK dialog', 'Should say OK')
+                            println terminal.messageDialog(title: 'OK dialog', 'Should say OK')
                         }
                         button('Click me for a Cancel dialog') {
-                            println messageDialog(button: 'Cancel', title: 'Cancel dialog', 'Should say Cancel')
+                            println terminal.messageDialog(button: 'Cancel', title: 'Cancel dialog', 'Should say Cancel')
                         }
                         button('Click me for a dialog with 2 buttons') {
-                            println messageDialog(buttons: ['OK', 'Cancel'], 'Should say OK and Cancel')
+                            println terminal.messageDialog(buttons: ['OK', 'Cancel'], 'Should say OK and Cancel')
                         }
                     }
                 }
             }
         }
 
+        terminal.messageDialog(title: 'Started', 'Application started')
         terminal.waitFor('main')
     }
 
@@ -307,10 +308,10 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     linearLayout {
                         button('Click me for an input dialog') {
-                            println textInputDialog(title: 'Input', description: 'Free-form input', size: [30, 10])
+                            println terminal.textInputDialog(title: 'Input', description: 'Free-form input', size: [30, 10])
                         }
                         button('Click me for a number input dialog') {
-                            println textInputDialog(
+                            println terminal.textInputDialog(
                                 title: 'Number input',
                                 description: 'Numbers only please!',
                                 validationPattern: '[0-9]*',
@@ -332,11 +333,11 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     linearLayout {
                         button('Click me for a file dialog') {
-                            def file = fileDialog(new File('C:/'))
+                            def file = terminal.fileDialog(new File('C:/'))
                             println file.absolutePath
                         }
                         button('Click me for a more complex file dialog') {
-                            def file = fileDialog(
+                            def file = terminal.fileDialog(
                                 title: 'Select a file bro!',
                                 description: 'Mak sure its a good file!',
                                 actionLabel: 'Go for it!',
@@ -361,7 +362,7 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     linearLayout {
                         button('Click me for an action list dialog') {
-                            actionListDialog {
+                            terminal.actionListDialog {
                                 action('Print foobar') {
                                     println 'foobar'
                                 }
@@ -371,7 +372,7 @@ public class LanternaTerminalBuilderTest {
                             }
                         }
                         button('Click me for a more complex action list dialog') {
-                            actionListDialog(
+                            terminal.actionListDialog(
                                 title: 'Foobar Printer',
                                 description: 'Allows you to print something',
                                 size: [20, 5]
