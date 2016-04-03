@@ -473,7 +473,7 @@ public class LanternaTerminalBuilderTest {
             window(id: 'main', title: 'ActionListDialog Test') {
                 panel {
                     linearLayout {
-                        panel {
+                        panel(borderStyle: 'singleLine') {
                             linearLayout(direction: 'vertical') {
                                 label('very long label to ensure we have room to align the following labels')
                                 label(align: 'center', 'Center')
@@ -482,10 +482,48 @@ public class LanternaTerminalBuilderTest {
                                 label(align: 'fill', 'Fill')
                             }
                         }
-                        panel {
+                        panel(borderStyle: 'singleLine') {
                             linearLayout(direction: 'horizontal') {
                                 label('left')
                                 label('right')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
+
+    @Ignore @Test
+    public void testGridLayout() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        panel(borderStyle: 'singleLine', borderTitle: 'spans and alignments') {
+                            gridLayout(3) {
+                                label(hSpan: 3, hAlign: 'center', 'hSpan 3 and centered')
+                                label(vSpan: 4, hAlign: 'center', vAlign: 'center', 'vSpan 2\nand centered')
+                                label('second line middle')
+                                label('second line end')
+                                label('3rd line middle')
+                                label('3rd line end')
+                                label('line 4 cell 2')
+                                label('line 4 cell 3')
+                                label('line 5 cell 2')
+                                label('line 5 cell 3')
+                            }
+                        }
+                        panel(borderStyle: 'singleLine', borderTitle: 'margins 3') {
+                            gridLayout(leftMargin: 3, topMargin: 3, rightMargin: 3, bottomMargin: 3, 3) {
+                                label("line 1 cell 1")
+                                label("line 1 cell 2")
+                                label("line 1 cell 3")
+                                label("line 2 cell 1")
+                                label("line 2 cell 2")
+                                label("line 2 cell 3")
                             }
                         }
                     }

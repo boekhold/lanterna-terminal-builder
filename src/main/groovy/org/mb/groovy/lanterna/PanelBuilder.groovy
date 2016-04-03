@@ -13,11 +13,40 @@ class PanelBuilder extends AbstractBuilder {
     }
 
     void gridLayout(int cols, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ComponentBuilder) Closure cl) {
+        gridLayout(null, cols, cl)
+    }
+
+    void gridLayout(Map attr, int cols, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ComponentBuilder) Closure cl) {
         final GridLayout layout = new GridLayout(cols)
-        layout.leftMarginSize = 0
-        layout.rightMarginSize = 0
+        
+        layout.leftMarginSize = attr?.leftMargin ? attr.leftMargin as int : 0
+        layout.rightMarginSize = attr?.leftMargin ? attr.leftMargin as int : 0
+        layout.topMarginSize = attr?.topMargin ? attr.topMargin as int : 0
+        layout.bottomMarginSize = attr?.bottomMargin ? attr.bottomMargin as int : 0
         panel.layoutManager = layout
-        ComponentBuilder builder = new ComponentBuilder(window, panel, null)
+
+        final LayoutHelper layoutHelper = new LayoutHelper() {
+            @Override
+            LayoutData createLayoutData(Map a) {
+                def getAlignment = {
+                    it ? GridLayout.Alignment.valueOf((it as String).toUpperCase()) : GridLayout.Alignment.BEGINNING
+                }
+                final GridLayout.Alignment hAlign = getAlignment(a?.hAlign)
+                final GridLayout.Alignment vAlign = getAlignment(a?.vAlign)
+
+                def getBoolean = {
+                    it ? it as boolean : false
+                }
+                final boolean grabExtraHorizontalSpace = getBoolean(a?.hGrabExtraSpace)
+                final boolean grabExtraVerticalSpace = getBoolean(a?.vGrabExtraSpace)
+
+                final int hSpan = a?.hSpan ? a.hSpan as int : 1
+                final int vSpan = a?.vSpan ? a.vSpan as int : 1
+
+                return GridLayout.createLayoutData(hAlign, vAlign, grabExtraHorizontalSpace, grabExtraVerticalSpace, hSpan, vSpan)
+            }
+        }
+        ComponentBuilder builder = new ComponentBuilder(window, panel, layoutHelper)
         runClosure(cl, builder)
     }
 
