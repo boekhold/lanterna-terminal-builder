@@ -13,7 +13,10 @@ class PanelBuilder extends AbstractBuilder {
     }
 
     void gridLayout(int cols, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ComponentBuilder) Closure cl) {
-        panel.setLayoutManager(new GridLayout(cols))
+        final GridLayout layout = new GridLayout(cols)
+        layout.leftMarginSize = 0
+        layout.rightMarginSize = 0
+        panel.layoutManager = layout
         ComponentBuilder builder = new ComponentBuilder(window, panel)
         runClosure(cl, builder)
     }

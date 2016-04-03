@@ -14,8 +14,11 @@ class WindowBuilder {
 
         if (attr?.title)
             window.underlying.title = attr.title
-        if (attr?.bareTerminal && attr.bareTerminal as boolean)
+        if (attr?.bareTerminal && attr.bareTerminal as boolean) {
             hints << Window.Hint.FULL_SCREEN
+            // Main window has no border, but dialogs still do!
+            hints << Window.Hint.NO_DECORATIONS
+        }
         window.underlying.hints = hints
     }
 

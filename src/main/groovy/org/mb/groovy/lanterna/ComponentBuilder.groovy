@@ -68,7 +68,9 @@ class ComponentBuilder extends AbstractBuilder {
             box = new TextBox(size)
         }
 
-        if (attr.validationPattern) {
+        if (attr?.password)
+            box.mask = '*'
+        if (attr?.validationPattern) {
             def pattern = Pattern.compile(attr.validationPattern as String)
             box.validationPattern = pattern
         }
@@ -194,7 +196,7 @@ class ComponentBuilder extends AbstractBuilder {
             }
         }
 
-        addComponent(attr, box)
+        addComponent(attr, addBorder(box, attr))
     }
 
     public void radioBoxList(Collection coll) {
@@ -228,7 +230,7 @@ class ComponentBuilder extends AbstractBuilder {
         if (attr?.checkedByIndex instanceof Number)
             box.setCheckedItemIndex(attr.checkedByIndex as int)
 
-        addComponent(attr, box)
+        addComponent(attr, addBorder(box, attr))
     }
 
     public void actionListBox(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListBoxBuilder) Closure cl) {
@@ -238,6 +240,6 @@ class ComponentBuilder extends AbstractBuilder {
     public void actionListBox(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListBoxBuilder) Closure cl) {
         ActionListBoxBuilder builder = new ActionListBoxBuilder(window, attr)
         runClosure(cl, builder)
-        addComponent(attr, builder.component)
+        addComponent(attr, addBorder(builder.component, attr))
     }
 }

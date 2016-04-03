@@ -82,6 +82,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testTextBox() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
@@ -92,6 +93,7 @@ public class LanternaTerminalBuilderTest {
                         textBox(size: 20, validationPattern: '[0-9]+', '12345A')
                         // the above should throw an exception as per the Lanterna docs,
                         // but it doesn't
+                        textBox(size: 20, password: true)
                     }
                 }
             }
@@ -102,6 +104,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testButton() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
@@ -121,6 +124,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testComboBox() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
                 panel {
@@ -148,6 +152,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testEmptySpace() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'Empty Space Test') {
                 panel {
@@ -168,6 +173,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testCheckBox() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBox Test') {
                 panel {
@@ -189,13 +195,14 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testCheckBoxList() {
+        // minimal theme OK, could be better with different scrollbar chars
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBoxList Test') {
                 panel {
                     gridLayout(2) {
                         label('Size 15x2')
                         def l1 = ['Item 1', 'Item 2', 'Item 3']
-                        checkBoxList(size: [15, 2], l1)
+                        checkBoxList(size: [15, 2], borderStyle: 'singleLine',  l1)
                         label('No Size')
                         checkBoxList(l1)
                         label('With Action')
@@ -214,6 +221,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testRadioBoxList() {
+        // minimal theme OK, could be better with different scrollbar chars
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'CheckBoxList Test') {
                 panel {
@@ -241,6 +249,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testActionListBox() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListBox Test') {
                 panel {
@@ -280,6 +289,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testMessageDialog() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'MessageDialog Test') {
                 panel {
@@ -304,6 +314,7 @@ public class LanternaTerminalBuilderTest {
 
     @Ignore @Test
     public void testTextInputDialog() {
+        // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'TextInputDialog Test') {
                 panel {
@@ -317,6 +328,13 @@ public class LanternaTerminalBuilderTest {
                                 description: 'Numbers only please!',
                                 validationPattern: '[0-9]*',
                                 errorMessage: 'Thats not a number!'
+                            )
+                        }
+                        button('Click me for a password dialog') {
+                            println terminal.textInputDialog(
+                                title: 'Password',
+                                description: 'Enter password',
+                                password: true
                             )
                         }
                     }

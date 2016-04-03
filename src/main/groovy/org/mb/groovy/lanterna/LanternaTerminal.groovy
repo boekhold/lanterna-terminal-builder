@@ -4,7 +4,8 @@ import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.graphics.PropertiesTheme
 import com.googlecode.lanterna.graphics.Theme
-import com.googlecode.lanterna.gui2.*
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI
+import com.googlecode.lanterna.gui2.TextGUI
 import com.googlecode.lanterna.gui2.dialogs.*
 import com.googlecode.lanterna.input.KeyStroke
 import com.googlecode.lanterna.screen.Screen
@@ -42,7 +43,7 @@ class LanternaTerminal {
         screen.startScreen();
 
         if (attr?.bareTerminal instanceof Boolean && attr.bareTerminal as boolean) {
-            gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(new EmptyWindowDecorationRenderer()), new EmptySpace(TextColor.ANSI.DEFAULT))
+            gui = new MultiWindowTextGUI(screen, TextColor.ANSI.DEFAULT)
             gui.theme = loadMinimalTheme()
             isBareTerminal = true
         } else {
@@ -133,17 +134,24 @@ class LanternaTerminal {
     }
 
     String textInputDialog(Map attr) {
+        textInputDialog(attr, '')
+    }
+
+    String textInputDialog(Map attr, String initialContent) {
         enterModal()
         try {
             TextInputDialogBuilder dialogBuilder = new TextInputDialogBuilder()
 
             TerminalSize size = AbstractBuilder.getSize(attr)
+            dialogBuilder.setInitialContent(initialContent)
             if (size)
-                dialogBuilder.textBoxSize = size
+                dialogBuilder.setTextBoxSize(size)
             if (attr?.title)
                 dialogBuilder.setTitle(attr.title as String)
             if (attr?.description)
                 dialogBuilder.setDescription(attr.description as String)
+            if (attr?.password)
+                dialogBuilder.setPasswordInput(true)
             if (attr?.validationPattern) {
                 // also need an errorMessage then!
                 if (!attr.errorMessage)
