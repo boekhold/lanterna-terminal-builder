@@ -533,4 +533,21 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('main')
     }
+
+    @Ignore @Test
+    public void testLabel() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        label(style: 'bold', 'Bold')
+                        label(style: ['underline', 'bold'], 'Underlined and bold')
+                        label('normal')
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }

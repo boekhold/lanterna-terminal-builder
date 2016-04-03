@@ -1,5 +1,6 @@
 package org.mb.groovy.lanterna
 
+import com.googlecode.lanterna.SGR
 import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.gui2.*
 
@@ -54,7 +55,19 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     void label(Map attr, String text) {
-        Component c = new Label(text)
+        Label c = new Label(text)
+
+        if (attr?.style) {
+            if (attr.style instanceof Collection) {
+                def styles = attr.style as Collection
+                styles.each {
+                    c.addStyle(SGR.valueOf(it.toString().toUpperCase()))
+                }
+            } else {
+                c.addStyle(SGR.valueOf((attr.style as String).toUpperCase()))
+            }
+        }
+
         addComponent(attr, addBorder(c, attr))
     }
 
