@@ -563,6 +563,8 @@ public class LanternaTerminalBuilderTest {
                         label(style: 'bold', 'Bold')
                         label(style: ['underline', 'bold'], 'Underlined and bold')
                         label('normal')
+                        label(foreground: 'red', 'Red')
+                        label(background: 'blue', 'Blue background')
                     }
                 }
             }

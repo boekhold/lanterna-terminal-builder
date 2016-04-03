@@ -68,6 +68,13 @@ class ComponentBuilder extends AbstractBuilder {
             }
         }
 
+        if (attr?.width)
+            c.labelWidth = attr.width as Integer
+        if (attr?.foreground)
+            c.foregroundColor = parseColor(attr.foreground as String)
+        if (attr?.background)
+            c.backgroundColor = parseColor(attr.background as String)
+
         addComponent(attr, addBorder(c, attr))
     }
 

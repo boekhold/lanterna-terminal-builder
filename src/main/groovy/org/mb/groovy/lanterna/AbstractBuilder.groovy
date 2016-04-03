@@ -1,10 +1,17 @@
 package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TerminalSize
+import com.googlecode.lanterna.TextColor
 import com.googlecode.lanterna.gui2.Borders
 import com.googlecode.lanterna.gui2.Component
 
+import java.util.regex.Pattern
+
 abstract class AbstractBuilder {
+    private static final Pattern STYLE_FORMAT = Pattern.compile("([a-zA-Z]+)(\\[([a-zA-Z0-9-_]+)\\])?");
+    private static final Pattern INDEXED_COLOR = Pattern.compile("#[0-9]{1,3}");
+    private static final Pattern RGB_COLOR = Pattern.compile("#[0-9a-fA-F]{6}");
+
     protected LanternaWindow window
     protected Component component
 
@@ -36,6 +43,26 @@ abstract class AbstractBuilder {
             default: border = Borders.singleLine()
         }
         return c.withBorder(border)
+    }
+
+    static TextColor parseColor(String value) {
+        value = value.trim();
+        if(RGB_COLOR.matcher(value).matches()) {
+            int r = Integer.parseInt(value.substring(1, 3), 16);
+            int g = Integer.parseInt(value.substring(3, 5), 16);
+            int b = Integer.parseInt(value.substring(5, 7), 16);
+            return new TextColor.RGB(r, g, b);
+        }
+        else if(INDEXED_COLOR.matcher(value).matches()) {
+            int index = Integer.parseInt(value.substring(1));
+            return new TextColor.Indexed(index);
+        }
+        try {
+            return TextColor.ANSI.valueOf(value.toUpperCase());
+        }
+        catch(IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown color definition \"" + value + "\"", e);
+        }
     }
 
     static TerminalSize getSize(Map attr) {
