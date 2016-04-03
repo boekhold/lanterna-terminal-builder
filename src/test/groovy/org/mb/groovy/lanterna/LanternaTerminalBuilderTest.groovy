@@ -565,6 +565,10 @@ public class LanternaTerminalBuilderTest {
                         label('normal')
                         label(foreground: 'red', 'Red')
                         label(background: 'blue', 'Blue background')
+                        // add a few more labels
+                        (1..5).each {
+                            label("Generated label $it")
+                        }
                     }
                 }
             }
