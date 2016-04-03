@@ -5,7 +5,8 @@ import org.junit.Ignore
 import org.junit.Test
 
 public class LanternaTerminalBuilderTest {
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testBasics() {
         def terminal = new LanternaTerminalBuilder().terminal(title: 'Main Frame') {
             window(id: 'mainWindow', title: 'My First Window') {
@@ -39,7 +40,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testBasicAlternative() {
         def terminal = new LanternaTerminalBuilder().terminal() {
             window(id: 'mainWindow', title: 'My First Window') {
@@ -55,7 +57,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testComponentRegistration() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
@@ -80,7 +83,8 @@ public class LanternaTerminalBuilderTest {
         assert terminal.windows['subWindow'].components.collect { k, v -> k } == ['label1', 'label2']
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testTextBox() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -89,7 +93,7 @@ public class LanternaTerminalBuilderTest {
                     linearLayout() {
                         textBox(id: 'tb1', size: 20, 'Hello World')
                         textBox(size: 20, components.tb1.text)
-                        textBox(size: [20,2], 'Hello\n  World')
+                        textBox(size: [20, 2], 'Hello\n  World')
                         textBox(size: 20, validationPattern: '[0-9]+', '12345A')
                         // the above should throw an exception as per the Lanterna docs,
                         // but it doesn't
@@ -102,7 +106,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testButton() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -122,7 +127,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testComboBox() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -150,7 +156,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testEmptySpace() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -171,7 +178,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testCheckBox() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -179,7 +187,7 @@ public class LanternaTerminalBuilderTest {
                 panel {
                     gridLayout(2) {
                         checkBox('Simple')
-                        checkBox(size: [15,2], 'With Size')
+                        checkBox(size: [15, 2], 'With Size')
                         checkBox(checked: true, 'Checked')
                         checkBox(checked: false, 'Unchecked')
                         checkBox('With Action') { checked ->
@@ -193,7 +201,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testCheckBoxList() {
         // minimal theme OK, could be better with different scrollbar chars
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -202,7 +211,7 @@ public class LanternaTerminalBuilderTest {
                     gridLayout(2) {
                         label('Size 15x2')
                         def l1 = ['Item 1', 'Item 2', 'Item 3']
-                        checkBoxList(size: [15, 2], borderStyle: 'singleLine',  l1)
+                        checkBoxList(size: [15, 2], borderStyle: 'singleLine', l1)
                         label('No Size')
                         checkBoxList(l1)
                         label('With Action')
@@ -219,7 +228,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testRadioBoxList() {
         // minimal theme OK, could be better with different scrollbar chars
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -247,7 +257,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testActionListBox() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -287,7 +298,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testMessageDialog() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -312,7 +324,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testTextInputDialog() {
         // minimal theme OK
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
@@ -345,7 +358,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testFileDialog() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'FileDialog Test') {
@@ -374,7 +388,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testActionListDialog() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
@@ -412,7 +427,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testOnKey() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
@@ -433,7 +449,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testMinimalTheme() {
         def terminal = new LanternaTerminalBuilder().terminal(title: 'Main Frame', bareTerminal: true) {
             window(id: 'mainWindow', title: 'My First Window') {
@@ -467,7 +484,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('mainWindow')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testLinearLayout() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
@@ -496,7 +514,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testGridLayout() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
@@ -534,7 +553,8 @@ public class LanternaTerminalBuilderTest {
         terminal.waitFor('main')
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testLabel() {
         def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
             window(id: 'main', title: 'ActionListDialog Test') {
@@ -548,6 +568,61 @@ public class LanternaTerminalBuilderTest {
             }
         }
 
+        terminal.waitFor('main')
+    }
+
+    @Ignore
+    @Test
+    public void testSeparator() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        panel(borderStyle: 'singleLine', borderTitle: 'horizontal separator') {
+                            linearLayout {
+                                label('Label 1')
+                                separator(size: [10, 2])
+                                label('Label2')
+                            }
+                        }
+                        panel(borderStyle: 'singleLine', borderTitle: 'vertical separator') {
+                            linearLayout(direction: 'horizontal') {
+                                label('Label 1')
+                                separator(direction: 'vertical', size: 5)
+                                label('Label2')
+                                separator(direction: 'vertical', size: [3, 5])
+                                label('Label 3')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
+
+    @Ignore
+    @Test
+    public void testListBoxSelectDialog() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
+            window(id: 'main', title: 'ListSelectDialog Test') {
+                panel {
+                    linearLayout {
+                        def theCollection = ['item 1', 'item 2', 'item 3', 'item 4']
+                        button('Click me for a simple dialog') {
+                            println terminal.listSelectDialog(theCollection)
+                        }
+                        button('Click me for dialog with size') {
+                            println terminal.listSelectDialog(size: [10, 5], theCollection)
+                        }
+                        button('Cannot cancel this') {
+                            println terminal.listSelectDialog(canCancel: false, theCollection)
+                        }
+                    }
+                }
+            }
+        }
         terminal.waitFor('main')
     }
 }

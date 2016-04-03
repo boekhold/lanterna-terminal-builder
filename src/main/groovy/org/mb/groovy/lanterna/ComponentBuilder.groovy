@@ -262,4 +262,22 @@ class ComponentBuilder extends AbstractBuilder {
         runClosure(cl, builder)
         addComponent(attr, addBorder(builder.component, attr))
     }
+
+    public void separator() {
+        separator(null)
+    }
+
+    public void separator(Map attr) {
+        final Direction dir = attr?.direction ? Direction.valueOf((attr.direction as String).toUpperCase()) : Direction.HORIZONTAL
+        Separator sep = new Separator(dir)
+
+        TerminalSize size = getSize(attr)
+        if (dir == Direction.VERTICAL && attr?.size instanceof Number)
+            size = new TerminalSize(size.rows, size.columns)
+
+        if (size)
+            sep.setPreferredSize(size)
+
+        addComponent(attr, sep)
+    }
 }

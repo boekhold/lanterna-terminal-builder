@@ -201,6 +201,7 @@ class LanternaTerminal {
     }
 
     void actionListDialog(Map attr, @DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = ActionListDialogBuilderImpl) Closure cl) {
+        enterModal()
         try {
             ActionListDialogBuilder dialogBuilder = new ActionListDialogBuilder()
 
@@ -218,6 +219,33 @@ class LanternaTerminal {
             code()
 
             dialogBuilder.build().showDialog(gui)
+        } finally {
+            leaveModal()
+        }
+    }
+
+    Object listSelectDialog(Collection coll) {
+        listSelectDialog(null, coll)
+    }
+
+    Object listSelectDialog(Map attr, Collection coll) {
+        enterModal()
+        try {
+            ListSelectDialogBuilder builder = new ListSelectDialogBuilder()
+            TerminalSize size = AbstractBuilder.getSize(attr)
+
+            if (size)
+                builder.listBoxSize = size
+
+            // Check for /presence/ of attribute, not for truth!
+            if (attr?.canCancel != null)
+                builder.canCancel = attr.canCancel
+
+            coll.each {
+                builder.addListItem(it)
+            }
+
+            builder.build().showDialog(gui)
         } finally {
             leaveModal()
         }
