@@ -8,19 +8,26 @@ import java.util.regex.Pattern
 class ComponentBuilder extends AbstractBuilder {
     final private Panel panel
     BorderLayout.Location location = null
+    LayoutHelper layoutHelper = null
 
-    ComponentBuilder(LanternaWindow window, Panel panel, BorderLayout.Location location) {
+    ComponentBuilder(LanternaWindow window, Panel panel, LayoutHelper layoutHelper, BorderLayout.Location location) {
         this.window = window
         this.panel = panel
+        this.layoutHelper = layoutHelper
         this.component = panel
         this.location = location
     }
 
-    ComponentBuilder(LanternaWindow window, Panel panel) {
-        this(window, panel, null)
+    ComponentBuilder(LanternaWindow window, Panel panel, LayoutHelper layoutHelper) {
+        this(window, panel, layoutHelper, null)
     }
 
     private void addComponent(Map attr, Component c) {
+        if (layoutHelper) {
+            LayoutData layoutData = layoutHelper.createLayoutData(attr)
+            c.layoutData = layoutData
+        }
+
         if (location) {
             if (panel.children?.any { ((BorderLayout.Location)it.layoutData) == location })
                 throw new LanternaBuilderException(location.toString() + ' location already contains a component')

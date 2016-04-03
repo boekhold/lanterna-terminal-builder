@@ -466,4 +466,33 @@ public class LanternaTerminalBuilderTest {
 
         terminal.waitFor('mainWindow')
     }
+
+    @Ignore @Test
+    public void testLinearLayout() {
+        def terminal = new LanternaTerminalBuilder().terminal(bareTerminal: true) {
+            window(id: 'main', title: 'ActionListDialog Test') {
+                panel {
+                    linearLayout {
+                        panel {
+                            linearLayout(direction: 'vertical') {
+                                label('very long label to ensure we have room to align the following labels')
+                                label(align: 'center', 'Center')
+                                label(align: 'beginning', 'Beginning')
+                                label(align: 'end', 'End')
+                                label(align: 'fill', 'Fill')
+                            }
+                        }
+                        panel {
+                            linearLayout(direction: 'horizontal') {
+                                label('left')
+                                label('right')
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        terminal.waitFor('main')
+    }
 }
