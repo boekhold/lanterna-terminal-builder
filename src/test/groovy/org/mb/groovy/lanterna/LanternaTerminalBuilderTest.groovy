@@ -236,19 +236,24 @@ public class LanternaTerminalBuilderTest {
             window(id: 'main', title: 'CheckBoxList Test') {
                 panel {
                     gridLayout(2) {
-                        label('Size 15x2')
-                        def items = ['Item 1', 'Item 2', 'Item 3']
-                        radioBoxList(size: [15, 2], items)
+                        label('Size 15x4')
+                        def items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6']
+                        def items3 = ['Item 1', 'Item 2', 'Item 3']
+                        radioBoxList(size: [15, 4], items)
+                        separator(hSpan: 2, hAlign: 'fill')
                         label('No Size')
-                        radioBoxList(items)
+                        radioBoxList(items3)
+                        separator(hSpan: 2, hAlign: 'fill')
                         label('With Action')
-                        radioBoxList(items) { selected, previous ->
+                        radioBoxList(items3) { selected, previous ->
                             println "item at index ${selected} is selected"
                         }
+                        separator(hSpan: 2, hAlign: 'fill')
                         label('With item 2 checked')
-                        radioBoxList(checked: items[1], items)
+                        radioBoxList(checked: items3[1], items3)
+                        separator(hSpan: 2, hAlign: 'fill')
                         label('With index 2 checked (Item 3)')
-                        radioBoxList(checkedByIndex: 2, items)
+                        radioBoxList(checkedByIndex: 2, items3)
                     }
                 }
             }
