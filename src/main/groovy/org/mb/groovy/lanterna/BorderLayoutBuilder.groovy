@@ -13,7 +13,7 @@ class BorderLayoutBuilder extends AbstractBuilder {
     }
 
     private void applyBuilder(Closure cl, BorderLayout.Location location) {
-        ComponentBuilder builder = new ComponentBuilder(window, panel, location)
+        ComponentBuilder builder = new ComponentBuilder(window, panel, null, location)
         runClosure(cl, builder)
     }
 

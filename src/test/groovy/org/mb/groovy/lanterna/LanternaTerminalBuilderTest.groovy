@@ -471,9 +471,6 @@ public class LanternaTerminalBuilderTest {
                                     label 'RIGHT'
                                 }
                                 bottom {
-                                    label 'BOTTOM'
-                                }
-                                left {
                                     label 'LEFT'
                                 }
                                 center {
