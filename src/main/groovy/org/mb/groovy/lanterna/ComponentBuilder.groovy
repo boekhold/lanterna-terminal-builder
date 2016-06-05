@@ -101,6 +101,8 @@ class ComponentBuilder extends AbstractBuilder {
             def pattern = Pattern.compile(attr.validationPattern as String)
             box.validationPattern = pattern
         }
+        if (attr?.readOnly)
+            box.readOnly = true
 
         addComponent(attr, addBorder(box, attr))
     }
@@ -161,7 +163,7 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     public void emptySpace() {
-        addComponent(null, new EmptySpace(new TerminalSize(0,0)))
+        addComponent(null, new EmptySpace())
     }
 
     public void checkBox(String label) {
