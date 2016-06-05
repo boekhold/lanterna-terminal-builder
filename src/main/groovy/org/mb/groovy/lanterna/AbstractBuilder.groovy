@@ -2,6 +2,7 @@ package org.mb.groovy.lanterna
 
 import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.TextColor
+import com.googlecode.lanterna.gui2.Border
 import com.googlecode.lanterna.gui2.Borders
 import com.googlecode.lanterna.gui2.Component
 
@@ -93,7 +94,10 @@ abstract class AbstractBuilder {
         if (window.components.containsKey(attr.id as String))
             throw new LanternaBuilderException("component with id '${attr.id}' is already registered")
 
-        window.components[attr.id as String] = c
+        if (c instanceof Border)
+            window.components[attr.id as String] = c.getComponent()
+        else
+            window.components[attr.id as String] = c
     }
 
     /**
